@@ -33,7 +33,7 @@ export default function Category() {
           display: "block",
           width: "64px",
           height: "auto",
-          marginBottom: "100px",
+          // marginBottom: "100px",
         }}
       />
       <h1>Select a Wine Category</h1>

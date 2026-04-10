@@ -16,7 +16,7 @@ select {
 }
 
 .page {
-  min-height: 100vh;
+  height: 100vh;
   /* padding: 32px 20px; */
   display: flex;
   flex-direction: column;
