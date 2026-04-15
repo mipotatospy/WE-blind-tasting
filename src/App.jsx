@@ -7,6 +7,8 @@ import Form from "./pages/Form";
 import Result from "./pages/Result";
 import FinishSignIn from "./pages/output/FinishSignIn.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AuthForm from "./components/Authentication/AuthForm.jsx"
+import AuthFinish from "./pages/AuthFinish.jsx";
 
 function App() {
   return (
@@ -41,6 +43,12 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route>
+          <Route path="/" element={<AuthForm />} />
+          <Route path="/auth/finish" element={<AuthFinish />} />
+          <Route path="/category" element={<Category />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
