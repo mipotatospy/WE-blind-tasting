@@ -17,7 +17,7 @@ select {
 
 .page {
   height: 100vh;
-  /* padding: 32px 20px; */
+  padding: 32px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -146,7 +146,7 @@ button:disabled {
 }
 
 .form-page {
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -250,9 +250,14 @@ button:disabled {
   text-align: left;
   border: none;
   border-radius: 14px;
-  background: #e6e6e9;
+  background: #ffffff;
+  color: #7a4aa8;
+  border: solid;
+  border-color: #7a4aa8;
+  border-width: 0.2px;
   padding: 14px 16px;
   font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.2s ease;
 }
