@@ -148,6 +148,11 @@ export default function AuthFinish() {
         const storedEmail = getStoredEmailForSignIn();
 
         if (!storedEmail) {
+          setStatus("manual");
+          return;
+        }
+
+        if (!storedEmail) {
           if (!cancelled) {
             setStatus("manual");
           }

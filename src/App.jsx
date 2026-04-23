@@ -44,11 +44,11 @@ function App() {
           }
         />
 
-        <Route>
+        {/* <Route>
           <Route path="/" element={<AuthForm />} />
           <Route path="/auth/finish" element={<AuthFinish />} />
           <Route path="/category" element={<Category />} />
-        </Route>
+        </Route> */}
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

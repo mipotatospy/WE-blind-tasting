@@ -87,7 +87,7 @@ import {
 const googleProvider = new GoogleAuthProvider();
 
 const actionCodeSettings = {
-  url: `${window.location.origin}/auth/finish`,
+  url: "https://we-blind-tasting.web.app/auth/finish",
   handleCodeInApp: true,
 };
 

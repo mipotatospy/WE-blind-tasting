@@ -1,3 +1,4 @@
+
 // import { useNavigate } from "react-router-dom";
 
 // const categories = [
@@ -11,9 +12,9 @@
 // export default function CategoryButtons() {
 //   const navigate = useNavigate();
 
-//   function handleSelect(category) {
+//   function handleSelect(categoryValue) {
 //     navigate("/form", {
-//       state: { category },
+//       state: { category: categoryValue },
 //     });
 //   }
 
@@ -32,15 +33,12 @@
 //   );
 // }
 
-
 import { useNavigate } from "react-router-dom";
 
 const categories = [
   { label: "White", value: "white" },
   { label: "Red", value: "red" },
-  { label: "Rosé", value: "rose" },
   { label: "Sparkling", value: "sparkling" },
-  { label: "Special", value: "special" },
 ];
 
 export default function CategoryButtons() {
