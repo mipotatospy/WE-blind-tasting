@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Authentication />} />
-        <Route path="/auth/finish" element={<FinishSignIn />} />
+        <Route path="/auth/finish" element={<AuthFinish />} />
 
         <Route
           path="/category"

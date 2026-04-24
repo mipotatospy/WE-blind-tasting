@@ -12,6 +12,24 @@
 //   "Bold",
 // ];
 
+// const wineOptionsByCategory = {
+//   red: ["red_01", "red_02", "red_03"],
+//   white: ["white_01", "white_02", "white_03"],
+//   sparkling: [
+//     "rose_01",
+//     "rose_02",
+//     "sparkling_01",
+//     "sparkling_02",
+//     "special_01",
+//     "special_02",
+//   ],
+// };
+
+// function getRealCategoryFromWineId(wineId) {
+//   if (!wineId) return "";
+//   return wineId.split("_")[0];
+// }
+
 // export default function FormModal({ category }) {
 //   const navigate = useNavigate();
 
@@ -21,6 +39,9 @@
 //   const [descriptors, setDescriptors] = useState([]);
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const [errorMessage, setErrorMessage] = useState("");
+
+//   const wineOptions = wineOptionsByCategory[category] || [];
+//   const realCategory = getRealCategoryFromWineId(wineId);
 
 //   function toggleDescriptor(value) {
 //     setDescriptors((prev) =>
@@ -45,16 +66,18 @@
 
 //       await saveSubmission({
 //         uid: user?.uid || null,
-//         category,
-//         wineId,
-//         rating,
-//         descriptors,
+//         category: realCategory || category,
+//         answers: {
+//           wine_id: wineId,
+//           overall_enjoyment: rating,
+//           descriptors,
+//         },
 //       });
 
 //       navigate("/result", {
 //         state: {
 //           wineId,
-//           category,
+//           category: realCategory || category,
 //         },
 //       });
 //     } catch (error) {
@@ -67,7 +90,7 @@
 //   return (
 //     <div className="modal-overlay">
 //       <div className="modal-window">
-//         <h2>{category} Wine Form</h2>
+//         <h2>{(realCategory || category)} Wine Form</h2>
 
 //         {step === 1 && (
 //           <div className="step-block">
@@ -79,9 +102,11 @@
 //                 required
 //               >
 //                 <option value="">Choose one</option>
-//                 <option value="1">1</option>
-//                 <option value="2">2</option>
-//                 <option value="3">3</option>
+//                 {wineOptions.map((option) => (
+//                   <option key={option} value={option}>
+//                     {option}
+//                   </option>
+//                 ))}
 //               </select>
 //             </label>
 
@@ -171,41 +196,22 @@
 //   );
 // }
 
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUser } from "../../services/authService";
 import { saveSubmission } from "../../services/submissionService";
+import { questionSets } from "../../services/questionSets";
 
-const descriptorsList = [
-  "Fruity",
-  "Floral",
-  "Dry",
-  "Sweet",
-  "Fresh",
-  "Bold",
-];
-
-const wineOptionsByCategory = {
-  red: ["red_01", "red_02", "red_03"],
-  white: ["white_01", "white_02", "white_03"],
-  sparkling: [
-    "rose_01",
-    "rose_02",
-    "sparkling_01",
-    "sparkling_02",
-    "special_01",
-    "special_02",
-  ],
-};
-
+// Function to get the real category (e.g., "rose", "sparkling", etc.)
 function getRealCategoryFromWineId(wineId) {
   if (!wineId) return "";
-  return wineId.split("_")[0];
+  return wineId.split("_")[0]; // Extract category (e.g., "rose", "sparkling", etc.)
 }
 
-export default function FormModal({ category }) {
+export default function FormModal() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { category } = location.state || {};  // Get the category passed from Category component
 
   const [step, setStep] = useState(1);
   const [wineId, setWineId] = useState("");
@@ -213,10 +219,36 @@ export default function FormModal({ category }) {
   const [descriptors, setDescriptors] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(category);
 
-  const wineOptions = wineOptionsByCategory[category] || [];
-  const realCategory = getRealCategoryFromWineId(wineId);
+  // Dynamically select the correct wine options based on category
+  const wineOptions = category === "sparkling"
+    ? [
+        "sparkling_01",
+        "sparkling_02",
+        "sparkling_03",
+        "sparkling_04",
+        "sparkling_05",
+        "sparkling_06",
+        "sparkling_07",
+        "rose_01",
+        "rose_02",
+        "rose_03",
+        "rose_04",
+        "rose_05",
+        "rose_06",
+        "special_01",
+      ]
+    : (category && questionSets[category] && questionSets[category][0]?.options) || [];
 
+  // Handle the wineId selection and update the real category (rose, sparkling, etc.)
+  function handleWineSelection(wineId) {
+    const realCategory = getRealCategoryFromWineId(wineId);
+    setWineId(wineId);
+    setSelectedCategory(realCategory);  // Update selected category
+  }
+
+  // Handle descriptor toggle
   function toggleDescriptor(value) {
     setDescriptors((prev) =>
       prev.includes(value)
@@ -225,6 +257,7 @@ export default function FormModal({ category }) {
     );
   }
 
+  // Handle final submit of the form
   async function handleFinalSubmit() {
     setErrorMessage("");
 
@@ -240,7 +273,7 @@ export default function FormModal({ category }) {
 
       await saveSubmission({
         uid: user?.uid || null,
-        category: realCategory || category,
+        category: selectedCategory || category,  // Save the correct category (rose, sparkling, etc.)
         answers: {
           wine_id: wineId,
           overall_enjoyment: rating,
@@ -251,7 +284,7 @@ export default function FormModal({ category }) {
       navigate("/result", {
         state: {
           wineId,
-          category: realCategory || category,
+          category: selectedCategory || category,  // Pass the correct category to result page
         },
       });
     } catch (error) {
@@ -261,10 +294,15 @@ export default function FormModal({ category }) {
     }
   }
 
+  useEffect(() => {
+    console.log("Wine Options:", wineOptions);
+    console.log("Real Category:", selectedCategory);
+  }, [wineId]);
+
   return (
     <div className="modal-overlay">
       <div className="modal-window">
-        <h2>{(realCategory || category)} Wine Form</h2>
+        <h2>{(selectedCategory || category)} Wine Form</h2>
 
         {step === 1 && (
           <div className="step-block">
@@ -272,7 +310,7 @@ export default function FormModal({ category }) {
               Select Wine ID
               <select
                 value={wineId}
-                onChange={(e) => setWineId(e.target.value)}
+                onChange={(e) => handleWineSelection(e.target.value)}
                 required
               >
                 <option value="">Choose one</option>
